@@ -6,6 +6,27 @@
     <title>IP Information</title>
 </head>
 <body>
-    <p>Loading...</p>
+    <script>
+        fetch('https://armolab.cc/cdn-cgi/trace')
+            .then(response => response.text())
+            .then(data => {
+                const parsedData = data.split('\n')
+                    .map(line => line.split('='))
+                    .reduce((acc, [key, value]) => {
+                        acc[key] = value;
+                        return acc;
+                    }, {});
+                document.body.innerHTML = `
+                    <p>您的IP地址为 ${parsedData.ip}</p>
+                    <p>您当前IP的国家代码为 ${parsedData.loc}</p>
+                    <p>您当前TLS版本为 ${parsedData.tls}</p>
+                    <p>您当前使用的HTTP版本为 ${parsedData.http}</p>
+                    <p>您的User-Agent为 ${parsedData.uag}</p>
+                    <p>您当前使用的密钥交换机制为 ${parsedData.kex}</p>
+                    ${parsedData.warp === 'off' ? '<p>您当前没有使用Cloudflare Warp</p>' : '<p>您当前正在使用Cloudflare Warp</p>'}
+                `;
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    </script>
 </body>
 </html>
