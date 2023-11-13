@@ -6,7 +6,7 @@
     <title>IP Information</title>
     <style>
         body {
-            font-family: 'https://static.icy.asia/armolab/Apple.woff2', sans-serif;
+            font-family: sans-serif;
         }
     </style>
 </head>
@@ -17,7 +17,7 @@
             .then(data => {
                 const parsedData = data.split('\n')
                     .map(line => line.split('='))
-                    .reduce((acc, [key, value]) => {
+                    ..reduce((acc, [key, value]) => {
                         acc[key] = value;
                         return acc;
                     }, {});
