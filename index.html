@@ -1,27 +1,25 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IP Information</title>
-    <style>
-        body {
-            font-family: sans-serif;
-        }
-    </style>
 </head>
 <body>
     <script>
+        // Fetching the content from the provided URL
         fetch('https://ip.api.armolab.cc/cdn-cgi/trace')
             .then(response => response.text())
             .then(data => {
+                // Parsing the content to extract required information
                 const parsedData = data.split('\n')
                     .map(line => line.split('='))
-                    ..reduce((acc, [key, value]) => {
+                    .reduce((acc, [key, value]) => {
                         acc[key] = value;
                         return acc;
                     }, {});
 
+                // Displaying the extracted information in the HTML body
                 document.body.innerHTML = `
                     <p>您的IP地址为 ${parsedData.ip}</p>
                     <p>您当前IP的国家代码为 ${parsedData.loc}</p>
