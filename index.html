@@ -4,19 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ArmoLab IP Info</title>
-    <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="https://static.icy.asia/armolab/Apple.woff2" type="font/woff2">
+    <style>
+        body {
+            font-family: 'Apple', sans-serif;
+            margin: 20px;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 24px;
+        }
+
+        #info {
+            font-size: 18px;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
 
 <h2>您的浏览器信息如下</h2>
-<div class="info-container">
-    <div class="info-item" id="ip-info">您的IP地址是：</div>
-    <button onclick="copyToClipboard('ip-info')">复制IP地址</button>
-</div>
+<div id="info"></div>
 
 <script>
-    const apiUrl = 'https://armolab.cc/cdn-cgi/trace'; // Updated API URL
+    const apiUrl = 'https://armolab.cc/cdn-cgi/trace';
 
     async function fetchData() {
         const response = await fetch(apiUrl);
@@ -33,28 +45,57 @@
                 return acc;
             }, {});
 
+        let info = '';
+
         switch (path) {
             case '/ip':
-                displayInfo('ip-info', `您的IP地址是：${parsedData.ip}`);
+                info = `您的IP地址是 ${parsedData.ip}`;
+                break;
+            case '/tls':
+                info = `您的TLS版本是 ${parsedData.tls}`;
+                break;
+            case '/loc':
+                info = `您的地理位置是 ${parsedData.loc}`;
+                break;
+            case '/http':
+                info = `您的HTTP版本是 ${parsedData.http}`;
                 break;
             default:
-                displayInfo('ip-info', '无效路径');
+                info = '无效路径';
         }
+
+        document.getElementById('info').innerText = info;
     }
 
-    function displayInfo(elementId, info) {
-        document.getElementById(elementId).innerText = info;
+    function copyToClipboard(text) {
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
     }
 
-    function copyToClipboard(elementId) {
-        const textToCopy = document.getElementById(elementId).innerText;
-        navigator.clipboard.writeText(textToCopy)
-            .then(() => alert('已复制到剪贴板'))
-            .catch((err) => console.error('复制失败：', err));
+    function addCopyButtons() {
+        const infoDiv = document.getElementById('info');
+        const infoLines = infoDiv.childNodes;
+
+        infoLines.forEach((line) => {
+            const copyButton = document.createElement('button');
+            copyButton.innerText = '复制';
+            copyButton.addEventListener('click', () => {
+                copyToClipboard(line.innerText);
+            });
+
+            line.appendChild(copyButton);
+        });
     }
 
     const currentPath = window.location.pathname;
     handlePath(currentPath);
+    window.addEventListener('load', () => {
+        addCopyButtons();
+    });
 </script>
 
 </body>
