@@ -28,14 +28,16 @@
 <div id="info"></div>
 
 <script>
-    const apiUrl = 'https://armolab.cc/cdn-cgi/trace';
+    const apiUrl = 'https://armolab.cc/cdn-cgi/trace'; // Updated API URL
 
+    // Function to fetch data from the API
     async function fetchData() {
         const response = await fetch(apiUrl);
         const data = await response.text();
         return data;
     }
 
+    // Function to extract information based on the path
     async function handlePath(path) {
         const data = await fetchData();
         const parsedData = data.split('\n')
@@ -47,6 +49,7 @@
 
         let info = '';
 
+        // Check the path and construct corresponding information
         switch (path) {
             case '/ip':
                 info = `您的IP地址是 ${parsedData.ip}`;
@@ -60,42 +63,18 @@
             case '/http':
                 info = `您的HTTP版本是 ${parsedData.http}`;
                 break;
+            // Add similar cases for other endpoints ("/uag", "/kex", "/warp", etc.)
             default:
                 info = '无效路径';
         }
 
+        // Display information on the page
         document.getElementById('info').innerText = info;
     }
 
-    function copyToClipboard(text) {
-        const textArea = document.createElement('textarea');
-        textArea.value = text;
-        document.body.appendChild(textArea);
-        textArea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textArea);
-    }
-
-    function addCopyButtons() {
-        const infoDiv = document.getElementById('info');
-        const infoLines = infoDiv.childNodes;
-
-        infoLines.forEach((line) => {
-            const copyButton = document.createElement('button');
-            copyButton.innerText = '复制';
-            copyButton.addEventListener('click', () => {
-                copyToClipboard(line.innerText);
-            });
-
-            line.appendChild(copyButton);
-        });
-    }
-
+    // Get the current path and handle it
     const currentPath = window.location.pathname;
     handlePath(currentPath);
-    window.addEventListener('load', () => {
-        addCopyButtons();
-    });
 </script>
 
 </body>
