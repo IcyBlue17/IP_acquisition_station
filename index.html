@@ -7,40 +7,27 @@
 </head>
 <body>
     <script>
-        window.addEventListener('load', () => {
-            fetch('https://armolab.cc/cdn-cgi/trace')
-                .then(response => response.text())
-                .then(data => {
-                    const parsedData = data.split('\n')
-                        .map(line => line.split('='))
-                        .reduce((acc, [key, value]) => {
-                            acc[key] = value;
-                            return acc;
-                        }, {});
+        fetch('https://ip.api.armolab.cc/cdn-cgi/trace')
+            .then(response => response.text())
+            .then(data => {
+                const parsedData = data.split('\n')
+                    .map(line => line.split('='))
+                    .reduce((acc, [key, value]) => {
+                        acc[key] = value;
+                        return acc;
+                    }, {});
 
-                    document.body.innerHTML = `
-                        <p>您的IP地址为 ${parsedData.ip}</p>
-                        <p>您当前IP的国家代码为 ${parsedData.loc}</p>
-                        <p>您当前TLS版本为 ${parsedData.tls}</p>
-                        <p>您当前使用的HTTP版本为 ${parsedData.http}</p>
-                        <p>您的User-Agent为 ${parsedData.uag}</p>
-                        <p>您当前使用的密钥交换机制为 ${parsedData.kex}</p>
-                        ${parsedData.warp === 'off' ? '<p>您当前没有使用Cloudflare Warp</p>' : '<p>您当前正在使用Cloudflare Warp</p>'}
-                    `;
-                    const h3Title = document.createElement('h3');
-                    h3Title.textContent = '您当前的浏览器信息:';
-                    document.body.insertBefore(h3Title, document.body.firstChild);
-                    const footerLink = document.createElement('a');
-                    footerLink.href = 'https://armolab.cc';
-                    footerLink.target = '_blank';
-                    footerLink.rel = 'noopener noreferrer';
-                    footerLink.textContent = 'armolab官网';
-                    const footer = document.createElement('footer');
-                    footer.appendChild(footerLink);
-                    document.body.appendChild(footer);
-                })
-                .catch(error => console.error('Error fetching data:', error));
-        });
+                document.body.innerHTML = `
+                    <p>您的IP地址为 ${parsedData.ip}</p>
+                    <p>您当前IP的国家代码为 ${parsedData.loc}</p>
+                    <p>您当前TLS版本为 ${parsedData.tls}</p>
+                    <p>您当前使用的HTTP版本为 ${parsedData.http}</p>
+                    <p>您的User-Agent为 ${parsedData.uag}</p>
+                    <p>您当前使用的密钥交换机制为 ${parsedData.kex}</p>
+                    ${parsedData.warp === 'off' ? '<p>您当前没有使用Cloudflare Warp</p>' : '<p>您当前正在使用Cloudflare Warp</p>'}
+                `;
+            })
+            .catch(error => console.error('Error fetching data:', error));
     </script>
 </body>
 </html>
