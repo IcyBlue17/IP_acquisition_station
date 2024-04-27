@@ -9,7 +9,7 @@ let ipinfo = {
     warp: null
 };
 
-fetch('https://ick.moe/cdn-cgi/trace')
+fetch('https://crl.globalsign.com/cdn-cgi/trace')
     .then(response => response.text())
     .then(data => {
         data.split('\n')
