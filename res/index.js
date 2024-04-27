@@ -19,7 +19,7 @@ fetch('https://ick.moe/cdn-cgi/trace')
                     ipinfo[key] = value;
                 }
             });
-        document.body.innerHTML += `
+        document.getElementById('infoContainer').innerHTML += `
             <p>您的IP地址为 ${ipinfo.ip}</p>
             <p>您当前IP的国家代码为 ${ipinfo.loc}</p>
             <p>您当前TLS版本为 ${ipinfo.tls}</p>
